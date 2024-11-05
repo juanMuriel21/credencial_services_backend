@@ -40,12 +40,30 @@ app.MapGet("/api/credenciales", () => {
 
 });
 
+app.MapGet("/api/credenciales/{servicio}", (string servicio) => {
+    var credencial = credenciales.FirstOrDefault(c => c.servicio.Equals(servicio, StringComparison.OrdinalIgnoreCase));
+    if (credencial != null)
+    {
+        return Results.Ok(credencial);
+    }
+    return Results.NotFound("Credencial no encontrada.");
+});
+
+app.MapDelete("/api/credenciales/{servicio}", (string servicio) => {
+    var credencial = credenciales.FirstOrDefault(c => c.servicio.Equals(servicio, StringComparison.OrdinalIgnoreCase));
+    if (credencial != null)
+    {
+        credenciales.Remove(credencial);
+        return Results.Ok("Credencial eliminada.");
+    }
+    return Results.NotFound("Credencial no encontrada.");
+});
 
 app.Run();
 
 public class Credencial
 {
     public string servicio { get; set; }
-    public string usuario { get; set; }
-    public string password { get; set; }
+    public string? usuario { get; set; }
+    public string? password { get; set; }
 }
